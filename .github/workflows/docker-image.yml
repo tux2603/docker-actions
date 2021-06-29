@@ -13,4 +13,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      env:
+        DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+      run: |
+        timestamp=$(date +%s)
+        docker login -u tux2603 -p $DOCKER_TOKEN
+        docker build . --file Dockerfile --tag tux2603/helloworld:$timestamp
+        docker image push tux2603/helloworld:$timestamp
+
